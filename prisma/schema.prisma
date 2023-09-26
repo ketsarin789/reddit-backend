@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String      @id @default(uuid())
+  username   String      @unique
+  password   String
+  posts      Post[]
+  subreddits Subreddit[]
+  Upvotes    Upvotes[]
+  Downvotes  Downvotes[]
+}
+
+model Post {
+  id          String      @id @default(uuid())
+  text        String      @unique
+  title       String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  parentId    String?
+  subreddit   Subreddit   @relation(fields: [subredditId], references: [id], onDelete: Cascade)
+  children    Post[]      @relation("parentChild")
+  parent      Post?       @relation("parentChild", fields: [parentId], references: [id], onDelete: Cascade)
+  subredditId String
+  upvotes     Upvotes[]
+  downvotes   Downvotes[]
+}
+
+model Subreddit {
+  id     String @id @default(uuid())
+  name   String @unique
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts  Post[]
+}
+
+model Upvotes {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  @@unique([userId, postId])
+}
+
+model Downvotes {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  @@unique([userId, postId])
+}
