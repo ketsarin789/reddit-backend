@@ -13,6 +13,8 @@ postRouter.get("/", async (req, res) => {
       include: {
         subreddit: true,
         parent: true,
+        downvotes: true,
+        upvotes: true,
         user: {
           select: {
             id: true,
