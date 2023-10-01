@@ -23,7 +23,7 @@ model User {
 model Post {
   id          String      @id @default(uuid())
   text        String      @unique
-  title       String
+  title       String?
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   parentId    String?

@@ -9,6 +9,8 @@ voteRouter.post("/downvotes/:postId", async (req, res) => {
   try {
     const downvoteCheck = await prisma.downvotes.findUnique({
       where: {
+        // postId,
+        // userId: req.user.id,
         id: postId,
       },
     });
@@ -45,6 +47,7 @@ voteRouter.post("/downvotes/:postId", async (req, res) => {
 
 voteRouter.delete("/downvotes/:postId", async (req, res) => {
   const { postId } = req.params;
+
   try {
     const downvoteCheck = await prisma.downvotes.findUnique({
       where: {
@@ -65,7 +68,10 @@ voteRouter.delete("/downvotes/:postId", async (req, res) => {
     }
     const deleteDownvote = await prisma.downvotes.delete({
       where: {
-        userId_postId: { userId: req.user.id, postId },
+        userId: req.body.id,
+        postId,
+
+        // _postId: { userId: req.user.id, postId },
       },
     });
     res.send({
@@ -129,10 +135,17 @@ voteRouter.delete("/upvotes/:postId", async (req, res) => {
         error: "User not authorized to votes this content.",
       });
     }
+    const { postId } = params;
+    console.log(postId);
     const upvotes = await prisma.upvotes.delete({
       where: {
-        userId: req.user.id,
-        postId,
+        userId_postId: {
+          userId: req.user.id,
+          postId,
+        },
+        // userId: req.user.id,
+        // postId,
+        // id: postId,
       },
     });
     res.send({

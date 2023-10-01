@@ -40,10 +40,10 @@ postRouter.post("/", async (req, res) => {
   const { text, title, subredditId, parentId } = req.body;
 
   try {
-    if (!text || !title || !subredditId) {
+    if (!text || !subredditId) {
       return res.send({
         success: false,
-        error: "Please include text, title, and subreddit when creating a post",
+        error: "Please include text, and subreddit when creating a post",
       });
     }
     if (!req.user) {
