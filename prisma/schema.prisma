@@ -18,6 +18,7 @@ model User {
   subreddits Subreddit[]
   Upvotes    Upvotes[]
   Downvotes  Downvotes[]
+  comments   Comments[]
 }
 
 model Post {
@@ -33,6 +34,8 @@ model Post {
   subredditId String
   upvotes     Upvotes[]
   downvotes   Downvotes[]
+  comments    Comments[]
+  commentId   String?
 }
 
 model Subreddit {
@@ -61,4 +64,14 @@ model Downvotes {
   postId String
 
   @@unique([userId, postId])
+}
+
+model Comments {
+  id     String  @id @default(uuid())
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  post   Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  text   String
+  title  String?
 }

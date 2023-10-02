@@ -8,6 +8,7 @@ import { userRouter } from "./routes/userRouter.js";
 import { postRouter } from "./routes/postRouter.js";
 import { subredditRouter } from "./routes/subRedditRouter.js";
 import { voteRouter } from "./routes/voteRouter.js";
+import { commentRouter } from "./routes/commentRouter.js";
 
 dotenv.config();
 
@@ -50,6 +51,7 @@ app.use("/users", userRouter);
 app.use("/posts", postRouter);
 app.use("/subreddits", subredditRouter);
 app.use("/votes", voteRouter);
+app.use("/comments", commentRouter);
 
 app.get("/", (req, res) => {
   res.send({

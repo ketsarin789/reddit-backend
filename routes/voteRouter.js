@@ -90,16 +90,17 @@ voteRouter.delete("/downvotes/:postId", async (req, res) => {
 voteRouter.post("/upvotes/:postId", async (req, res) => {
   const { postId } = req.params;
   try {
-    if (!req.user.id) {
+    if (!req.user.id || !req.user) {
       return res.send({
         success: false,
         error: "Please login to vote.",
       });
     }
+    //create new uppost
     const upvote = await prisma.upvotes.create({
       data: {
         userId: req.user.id,
-        postId,
+        postId: postId,
       },
     });
     res.send({
@@ -136,7 +137,7 @@ voteRouter.delete("/upvotes/:postId", async (req, res) => {
       });
     }
     const { postId } = params;
-    console.log(postId);
+
     const upvotes = await prisma.upvotes.delete({
       where: {
         userId_postId: {

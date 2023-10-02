@@ -15,6 +15,7 @@ postRouter.get("/", async (req, res) => {
         parent: true,
         downvotes: true,
         upvotes: true,
+        comments: true,
         user: {
           select: {
             id: true,
